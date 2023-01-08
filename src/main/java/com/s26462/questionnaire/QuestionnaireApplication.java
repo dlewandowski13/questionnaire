@@ -1,32 +1,46 @@
 package com.s26462.questionnaire;
 
+import com.s26462.questionnaire.product.Product;
+import com.s26462.questionnaire.product.ProductDto;
+import com.s26462.questionnaire.product.ProductMapper;
+import com.s26462.questionnaire.product.repository.ProductRepository;
+import lombok.NoArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
-@SpringBootConfiguration(proxyBeanMethods = false)
+@SpringBootConfiguration
+@Configuration
+@ComponentScan
 @EnableAutoConfiguration
 @Import({ MongoAutoConfiguration.class})
-@RestController
-@RequestMapping("/rest")
+@NoArgsConstructor
 public class QuestionnaireApplication {
 
+    ProductMapper productMapper;
     public static void main(String[] args) {
         SpringApplication.run(QuestionnaireApplication.class, args);
     }
 
-    @GetMapping
-    public String hello() {
-        return "Hallo World";
-    }
-
     @Bean
     public ModelMapper modelMapper() { return new ModelMapper(); }
+
+//    @Bean
+//    CommandLineRunner commandLineRunner (ProductRepositoryImpl productRepository, MongoTemplate mongoTemplate) {
+//            return args -> {
+//                Product product = new Product("prod1", "produkt1",true);
+//                productRepository.insert(product);
+//            };
+//
+//    }
+
 }
