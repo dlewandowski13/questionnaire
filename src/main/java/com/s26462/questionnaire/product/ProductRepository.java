@@ -1,17 +1,9 @@
 package com.s26462.questionnaire.product;
 
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
+@Repository
+public interface ProductRepository extends MongoRepository<Product, String> {
 
-public class ProductRepository {
-
-    private final List<Product> products = new ArrayList<>();
-    public void add(Product product) {
-        products.add(product);
-    }
-
-    public List<Product> getAllProducts() {
-        return products;
-    }
 }
