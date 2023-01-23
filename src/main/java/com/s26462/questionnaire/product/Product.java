@@ -18,11 +18,13 @@ public class Product {
     private String id;
     private String symbol;
     private String name;
+    private String company;
     private boolean isActive;
 
-    public Product(String symbol, String name, boolean isActive) {
+    public Product(String symbol, String name, String company, boolean isActive) {
         this.symbol = symbol;
         this.name = name;
+        this.company = company;
         this.isActive = isActive;
     }
 

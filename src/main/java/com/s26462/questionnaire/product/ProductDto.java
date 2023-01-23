@@ -11,5 +11,7 @@ public class ProductDto {
 
     private String symbol;
     private String name;
+    private String company;
     private boolean isActive;
+
 }
