@@ -1,6 +1,5 @@
 package com.s26462.questionnaire.product;
 
-import org.hibernate.validator.internal.IgnoreForbiddenApisErrors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -11,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -67,7 +67,7 @@ public class ProductControllerTest {
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().getSymbol()).isEqualTo("product1");
+        assertThat(Objects.requireNonNull(response.getBody()).getSymbol()).isEqualTo("product1");
         assertThat(response.getBody().getName()).isEqualTo("Product pierwszy");
         assertThat(response.getBody().getCompany()).isEqualTo("TUW");
         assertThat(response.getBody().isActive()).isEqualTo(true);
