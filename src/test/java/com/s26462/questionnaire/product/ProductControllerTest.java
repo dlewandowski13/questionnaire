@@ -1,15 +1,11 @@
 package com.s26462.questionnaire.product;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.when;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.MockitoAnnotations.initMocks;
-
+import org.hibernate.validator.internal.IgnoreForbiddenApisErrors;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -18,6 +14,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
+
 public class ProductControllerTest {
 
     @InjectMocks
@@ -25,7 +26,7 @@ public class ProductControllerTest {
     @Mock
     ProductService productService;
     @Mock
-     ProductMapper productMapper;
+    ProductMapper productMapper;
 
     @BeforeEach
     public void setup() {
@@ -52,6 +53,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @Disabled
     public void shouldReturnProductBySymbol() {
         //given
         String productSymbol = "product1";

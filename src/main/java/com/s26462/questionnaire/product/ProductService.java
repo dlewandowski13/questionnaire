@@ -22,6 +22,10 @@ public class ProductService {
         return productRepository.findById(productId);
     }
 
+    public Optional<Product> getProductBySymbol(String productSymbol) {
+        return productRepository.findBySymbol(productSymbol);
+    }
+
     public List<Product> getProducts() {
         return productRepository.findAll();
     }
@@ -29,11 +33,13 @@ public class ProductService {
     public void saveProducts(List<Product> products) {
         productRepository.saveAll(products);
     }
+
     public void insertProducts(List<Product> products) {
         productRepository.saveAll(products);
 //        products.stream()
 //                .map(product -> productRepository.insert(product));
     }
+
     public void insertProduct(Product product) {
         productRepository.insert(product);
     }

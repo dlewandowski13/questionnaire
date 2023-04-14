@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ProductTest {
 
     @Test
-    void newlyCreatedProductShouldHaveSymbolAndNameAndIsActiveTrue(){
+    void newlyCreatedProductShouldHaveSymbolAndNameAndIsActiveTrue() {
 
         //given
         Product product = new Product();

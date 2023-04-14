@@ -47,13 +47,11 @@ public class ProductController {
      * Metoda obsługująca GET:/products/{productSymbol}
      *
      * @param productSymbol - unikalny symbol produktu
-     *
      * @return w przypadku znalezienia produktu o podanym symbolu zwraca produkt, w przeciwnym wypadku zwraca notFound
      */
     @GetMapping("/{productSymbol}")
     public ResponseEntity<ProductDto> getProductsBySymbol(@PathVariable(value = "productSymbol") String productSymbol) {
-        //TODO pobranie produktu po symbolu
-        return productService.getProductById(productSymbol)
+        return productService.getProductBySymbol(productSymbol)
                 .map(productMapper::productToDtoMapper)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -63,7 +61,6 @@ public class ProductController {
      * Metoda obsługująca POST:/products
      *
      * @param productsDto - lista obiektów produktów w formacie json
-     *
      * @return ok
      */
 
@@ -74,8 +71,8 @@ public class ProductController {
         System.out.println("productsDto");
         System.out.println(productsDto);
         List<Product> products = productsDto.stream()
-                        .map(productMapper::productDtoToEntityMapper)
-                        .collect(Collectors.toList());
+                .map(productMapper::productDtoToEntityMapper)
+                .collect(Collectors.toList());
         System.out.println("products");
         System.out.println(products);
         productService.insertProducts(products);
@@ -86,7 +83,6 @@ public class ProductController {
      * Metoda obsługująca POST:/products/product
      *
      * @param productDto - obiekt produktu w formacie json
-     *
      * @return ok
      */
     @PostMapping("/product")
@@ -95,7 +91,7 @@ public class ProductController {
         logger.info(productDto);
         System.out.println("productDto");
         System.out.println(productDto);
-        Product product  = productMapper.productDtoToEntityMapper(productDto);
+        Product product = productMapper.productDtoToEntityMapper(productDto);
         System.out.println("products");
         System.out.println(product.toString());
         productService.insertProduct(product);
@@ -104,8 +100,9 @@ public class ProductController {
 
     /**
      * Metoda obsługująca PUT:/products/productSymbol
+     *
      * @param productSymbol - unikalny symbol produktu
-     * @param productDto - obiekt produktu, który ma zostać zaktualizowany
+     * @param productDto    - obiekt produktu, który ma zostać zaktualizowany
      * @return ok lub notFound
      */
 
@@ -113,7 +110,7 @@ public class ProductController {
     public ResponseEntity<Void> putProducts(@PathVariable String productSymbol, @RequestBody ProductDto productDto) {
         Optional<Product> currentProduct = productService.getProductById(productSymbol);
 
-        if(currentProduct.isPresent()) {
+        if (currentProduct.isPresent()) {
             Product product = productMapper.productDtoToEntityMapper(productDto);
             productService.updateProductById(productSymbol, product);
             return ResponseEntity.ok().build();
