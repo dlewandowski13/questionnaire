@@ -2,6 +2,7 @@ package com.s26462.questionnaire;
 
 import com.s26462.questionnaire.product.ProductMapper;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
@@ -20,8 +21,6 @@ import org.springframework.context.annotation.Import;
 @NoArgsConstructor
 public class QuestionnaireApplication {
 
-    ProductMapper productMapper;
-
     public static void main(String[] args) {
         SpringApplication.run(QuestionnaireApplication.class, args);
     }
@@ -30,14 +29,5 @@ public class QuestionnaireApplication {
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
-
-//    @Bean
-//    CommandLineRunner commandLineRunner (ProductRepositoryImpl productRepository, MongoTemplate mongoTemplate) {
-//            return args -> {
-//                Product product = new Product("prod1", "produkt1",true);
-//                productRepository.insert(product);
-//            };
-//
-//    }
 
 }

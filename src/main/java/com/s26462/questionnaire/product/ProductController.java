@@ -50,7 +50,7 @@ public class ProductController {
      * @return w przypadku znalezienia produktu o podanym symbolu zwraca produkt, w przeciwnym wypadku zwraca notFound
      */
     @GetMapping("/{productSymbol}")
-    public ResponseEntity<ProductDto> getProductsBySymbol(@PathVariable(value = "productSymbol") String productSymbol) {
+    public ResponseEntity<ProductDto> getProductBySymbol(@PathVariable(value = "productSymbol") String productSymbol) {
         return productService.getProductBySymbol(productSymbol)
                 .map(productMapper::productToDtoMapper)
                 .map(ResponseEntity::ok)
@@ -66,15 +66,9 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Void> postProducts(@RequestBody List<ProductDto> productsDto) {
-        logger.info("productsDto");
-        logger.info(productsDto);
-        System.out.println("productsDto");
-        System.out.println(productsDto);
         List<Product> products = productsDto.stream()
                 .map(productMapper::productDtoToEntityMapper)
                 .collect(Collectors.toList());
-        System.out.println("products");
-        System.out.println(products);
         productService.insertProducts(products);
         return ResponseEntity.ok().build();
     }
@@ -87,13 +81,7 @@ public class ProductController {
      */
     @PostMapping("/product")
     public ResponseEntity<Void> postProducts(@RequestBody ProductDto productDto) {
-        logger.info("productDto");
-        logger.info(productDto);
-        System.out.println("productDto");
-        System.out.println(productDto);
         Product product = productMapper.productDtoToEntityMapper(productDto);
-        System.out.println("products");
-        System.out.println(product.toString());
         productService.insertProduct(product);
         return ResponseEntity.ok().build();
     }

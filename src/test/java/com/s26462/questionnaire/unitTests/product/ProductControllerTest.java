@@ -1,5 +1,6 @@
-package com.s26462.questionnaire.product;
+package com.s26462.questionnaire.unitTests.product;
 
+import com.s26462.questionnaire.product.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -45,7 +45,6 @@ public class ProductControllerTest {
         expected.add(new ProductDto("product2", "Product drugi", "TUŻ", true));
         IntStream.range(0, products.size())
                 .forEach(i -> when(productMapper.productToDtoMapper(products.get(i))).thenReturn(expected.get(i)));
-//        when(productMapper.productToDtoMapper(products.get(0))).thenReturn(expected.get(0));
         //when
         List<ProductDto> actual = productController.getProducts().getBody();
         //then
@@ -57,21 +56,20 @@ public class ProductControllerTest {
     public void shouldReturnProductBySymbol() {
         //given
         String productSymbol = "product1";
-        Product product = new Product("product1", "Product pierwszy", "TUW", true);
+        Optional<Product> expected = Optional.of(new Product("product1", "Produkt pierwszy", "TUW", true));
 
-        when(productService.getProductById(productSymbol))
-                .thenReturn(Optional.of(product));
+        when(productService.getProductBySymbol(productSymbol))
+                .thenReturn(expected);
 
         //when
-        ResponseEntity<ProductDto> response = productController.getProductsBySymbol(productSymbol);
+        ResponseEntity<ProductDto> response = productController.getProductBySymbol(productSymbol);
+        ProductDto actual = response.getBody();
 
         //then
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(Objects.requireNonNull(response.getBody()).getSymbol()).isEqualTo("product1");
-        assertThat(response.getBody().getName()).isEqualTo("Product pierwszy");
-        assertThat(response.getBody().getCompany()).isEqualTo("TUW");
-        assertThat(response.getBody().isActive()).isEqualTo(true);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(expected.map(productMapper::productToDtoMapper).get(), actual);
     }
+
 
     @Test
     public void shouldReturnNotFound() {
@@ -81,7 +79,7 @@ public class ProductControllerTest {
                 .thenReturn(Optional.empty());
 
         //when
-        ResponseEntity<ProductDto> response = productController.getProductsBySymbol(productSymbol);
+        ResponseEntity<ProductDto> response = productController.getProductBySymbol(productSymbol);
 
         //then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);

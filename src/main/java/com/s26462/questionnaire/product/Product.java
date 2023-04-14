@@ -7,11 +7,13 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * The type Product.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
 @Document
-@AllArgsConstructor
 public class Product {
 
     @Id
@@ -21,6 +23,14 @@ public class Product {
     private String company;
     private boolean isActive;
 
+    /**
+     * Instantiates a new Product.
+     *
+     * @param symbol   the symbol
+     * @param name     the name
+     * @param company  the company
+     * @param isActive the is active
+     */
     public Product(String symbol, String name, String company, boolean isActive) {
         this.symbol = symbol;
         this.name = name;

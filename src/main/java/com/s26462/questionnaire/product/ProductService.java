@@ -2,48 +2,81 @@ package com.s26462.questionnaire.product;
 
 
 import com.s26462.questionnaire.product.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Product service.
+ */
 @Service
 public class ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-//    @Autowired
-//    public void setProductRepository() {
-//    }
+    /**
+     * Instantiates a new Product service.
+     *
+     * @param productRepository the product repository
+     */
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
+    /**
+     * Gets product by id.
+     *
+     * @param productId the product id
+     * @return the product by id
+     */
     public Optional<Product> getProductById(String productId) {
         return productRepository.findById(productId);
     }
 
+    /**
+     * Gets product by symbol.
+     *
+     * @param productSymbol the product symbol
+     * @return the product by symbol
+     */
     public Optional<Product> getProductBySymbol(String productSymbol) {
         return productRepository.findBySymbol(productSymbol);
     }
 
+    /**
+     * Gets products.
+     *
+     * @return the products
+     */
     public List<Product> getProducts() {
         return productRepository.findAll();
     }
 
-    public void saveProducts(List<Product> products) {
-        productRepository.saveAll(products);
-    }
-
+    /**
+     * Insert products.
+     *
+     * @param products the products
+     */
     public void insertProducts(List<Product> products) {
         productRepository.saveAll(products);
-//        products.stream()
-//                .map(product -> productRepository.insert(product));
     }
 
+    /**
+     * Insert product.
+     *
+     * @param product the product
+     */
     public void insertProduct(Product product) {
         productRepository.insert(product);
     }
 
+    /**
+     * Update product by id.
+     *
+     * @param productId the product id
+     * @param product   the product
+     */
     public void updateProductById(String productId, Product product) {
         productRepository.findById(productId).ifPresent(foundProduct -> {
             foundProduct.setSymbol(product.getSymbol());

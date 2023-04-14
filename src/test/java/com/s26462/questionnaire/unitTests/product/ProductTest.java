@@ -1,5 +1,6 @@
-package com.s26462.questionnaire.product;
+package com.s26462.questionnaire.unitTests.product;
 
+import com.s26462.questionnaire.product.Product;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
