@@ -2,7 +2,9 @@ package com.s26462.questionnaire.product;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,7 +41,7 @@ public class ProductController {
      * @param productSymbol - unikalny symbol produktu
      * @return w przypadku znalezienia produktu o podanym symbolu zwraca produkt, w przeciwnym wypadku zwraca notFound
      */
-    @GetMapping("/{productSymbol}")
+    @GetMapping("/product/{productSymbol}")
     public ResponseEntity<ProductDto> getProductBySymbol(@PathVariable(value = "productSymbol") String productSymbol) {
         return productService.getProductBySymbol(productSymbol)
                 .map(ResponseEntity::ok)
@@ -67,9 +69,14 @@ public class ProductController {
      * @return ok
      */
     @PostMapping("/product")
-    public ResponseEntity<Void> postProducts(@RequestBody ProductDto productDto) {
-        productService.insertProduct(productDto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<Object> postProducts(@RequestBody ProductDto productDto) {
+        ProductDto createdProduct = productService.insertProduct(productDto);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{productSymbol}")
+                .buildAndExpand(createdProduct.getSymbol())
+                .toUri();
+        return ResponseEntity.created(location).build();
     }
 
     /**
@@ -80,11 +87,17 @@ public class ProductController {
      * @return ok lub notFound
      */
 
-    @PutMapping("/{productSymbol}")
+    @PutMapping("/product/{productSymbol}")
     public ResponseEntity<ProductDto> putProducts(@PathVariable String productSymbol, @RequestBody ProductDto productDto) {
         return productService.updateProductBySymbol(productSymbol, productDto)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/product/{productSymbol}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable String productSymbol) {
+        productService.deleteProductBySymbol(productSymbol);
+        return ResponseEntity.noContent().build();
     }
 }
 

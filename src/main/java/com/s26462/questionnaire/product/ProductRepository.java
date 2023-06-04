@@ -1,7 +1,5 @@
 package com.s26462.questionnaire.product;
 
-import com.s26462.questionnaire.product.Product;
-import com.s26462.questionnaire.product.ProductService;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -22,13 +20,5 @@ public interface ProductRepository extends MongoRepository<Product, String> {
      */
     @Query("{ symbol: ?0 }")
     Optional<Product> findBySymbol(String productSymbol);
-
-    /**
-     * Delete product by symbol optional.
-     *
-     * @param productSymbol the product symbol
-     */
-    @Query("{ symbol: ?0 }")
-    void deleteProductBySymbol(String productSymbol);
 
 }
