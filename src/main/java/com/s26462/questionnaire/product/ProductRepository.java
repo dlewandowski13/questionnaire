@@ -1,17 +1,24 @@
 package com.s26462.questionnaire.product;
 
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
-public class ProductRepository {
+/**
+ * The interface Product repository.
+ */
+@Repository
+public interface ProductRepository extends MongoRepository<Product, String> {
 
-    private final List<Product> products = new ArrayList<>();
-    public void add(Product product) {
-        products.add(product);
-    }
+    /**
+     * Find by symbol optional.
+     *
+     * @param productSymbol the product symbol
+     * @return the optional
+     */
+    @Query("{ symbol: ?0 }")
+    Optional<Product> findBySymbol(String productSymbol);
 
-    public List<Product> getAllProducts() {
-        return products;
-    }
 }
