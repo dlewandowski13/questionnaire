@@ -1,10 +1,10 @@
 package com.s26462.questionnaire.product;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -13,11 +13,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Getter
 @Setter
 @NoArgsConstructor
-@Document
+@Document(collection = "product")
 public class Product {
 
     @Id
     private String id;
+    @Indexed(unique = true)
     private String symbol;
     private String name;
     private String company;

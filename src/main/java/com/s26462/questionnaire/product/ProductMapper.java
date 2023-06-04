@@ -1,17 +1,21 @@
 package com.s26462.questionnaire.product;
 
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * The type Product mapper.
  */
 @Component
-@RequiredArgsConstructor
 public class ProductMapper {
 
     private final ModelMapper modelMapper;
+
+    @Autowired
+    public ProductMapper(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
 
     /**
      * Product dto to entity mapper product.

@@ -1,6 +1,7 @@
-package com.s26462.questionnaire.product.repository;
+package com.s26462.questionnaire.product;
 
 import com.s26462.questionnaire.product.Product;
+import com.s26462.questionnaire.product.ProductService;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;

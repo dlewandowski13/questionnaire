@@ -1,27 +1,28 @@
 package com.s26462.questionnaire.product;
 
 
-import com.s26462.questionnaire.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * The type Product service.
  */
 @Service
 public class ProductService {
-
     private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
     /**
      * Instantiates a new Product service.
      *
      * @param productRepository the product repository
      */
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
+        this.productMapper = productMapper;
     }
 
     /**
@@ -30,8 +31,10 @@ public class ProductService {
      * @param productId the product id
      * @return the product by id
      */
-    public Optional<Product> getProductById(String productId) {
-        return productRepository.findById(productId);
+    public Optional<ProductDto> getProductById(String productId) {
+        return Optional.ofNullable(productId)
+                        .flatMap(productRepository::findBySymbol)
+                        .map(productMapper::productToDtoMapper);
     }
 
     /**
@@ -40,17 +43,24 @@ public class ProductService {
      * @param productSymbol the product symbol
      * @return the product by symbol
      */
-    public Optional<Product> getProductBySymbol(String productSymbol) {
-        return productRepository.findBySymbol(productSymbol);
+    public Optional<ProductDto> getProductBySymbol(String productSymbol) {
+        return Optional.ofNullable(productSymbol)
+                .flatMap(productRepository::findBySymbol)
+                .map(productMapper::productToDtoMapper);
     }
+
 
     /**
      * Gets products.
      *
      * @return the products
      */
-    public List<Product> getProducts() {
-        return productRepository.findAll();
+    public Optional<List<ProductDto>> getProducts() {
+        List<Product> products = productRepository.findAll();
+        List<ProductDto> productsDto = products.stream()
+                .map(productMapper::productToDtoMapper)
+                .collect(Collectors.toList());
+        return Optional.of(productsDto);
     }
 
     /**
@@ -58,31 +68,35 @@ public class ProductService {
      *
      * @param products the products
      */
-    public void insertProducts(List<Product> products) {
-        productRepository.saveAll(products);
+    public void insertProducts(List<ProductDto> products) {
+        productRepository.saveAll(products.stream()
+                .map(productMapper::productDtoToEntityMapper)
+                .collect(Collectors.toList()));
     }
+
 
     /**
      * Insert product.
      *
-     * @param product the product
+     * @param productDto the product
      */
-    public void insertProduct(Product product) {
-        productRepository.insert(product);
+    public void insertProduct(ProductDto productDto) {
+        productRepository.insert(productMapper.productDtoToEntityMapper(productDto));
     }
 
     /**
      * Update product by id.
      *
-     * @param productId the product id
-     * @param product   the product
+     * @param productSymbol the product id
+     * @param productDto   the product
      */
-    public void updateProductById(String productId, Product product) {
-        productRepository.findById(productId).ifPresent(foundProduct -> {
-            foundProduct.setSymbol(product.getSymbol());
-            foundProduct.setName(product.getName());
-            foundProduct.setActive(product.isActive());
-            productRepository.save(foundProduct);
-        });
+    public Optional<ProductDto> updateProductBySymbol(String productSymbol, ProductDto productDto) {
+        return productRepository.findBySymbol(productSymbol)
+                .map(existingProduct -> {
+                    Product updatedProduct = productMapper.productDtoToEntityMapper(productDto);
+                    updatedProduct.setSymbol(productSymbol);
+                    productRepository.save(updatedProduct);
+                    return productMapper.productToDtoMapper(updatedProduct);
+                });
     }
 }

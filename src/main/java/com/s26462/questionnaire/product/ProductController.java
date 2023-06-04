@@ -1,14 +1,10 @@
 package com.s26462.questionnaire.product;
 
-import com.s26462.questionnaire.QuestionnaireApplication;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Kontroler obsługujący produkty /products
@@ -19,14 +15,10 @@ import java.util.stream.Collectors;
 @RequestMapping("/products")
 public class ProductController {
 
-    private static final Logger logger = LogManager.getLogger(QuestionnaireApplication.class);
-
     private final ProductService productService;
-    private final ProductMapper productMapper;
 
-    public ProductController(ProductService productService, ProductMapper productMapper) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
-        this.productMapper = productMapper;
     }
 
     /**
@@ -36,11 +28,9 @@ public class ProductController {
      */
     @GetMapping
     public ResponseEntity<List<ProductDto>> getProducts() {
-        List<Product> products = productService.getProducts();
-        List<ProductDto> productsDto = products.stream()
-                .map(productMapper::productToDtoMapper)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(productsDto);
+        List<ProductDto> products = productService.getProducts()
+                .orElse(Collections.emptyList());
+        return ResponseEntity.ok(products);
     }
 
     /**
@@ -52,10 +42,10 @@ public class ProductController {
     @GetMapping("/{productSymbol}")
     public ResponseEntity<ProductDto> getProductBySymbol(@PathVariable(value = "productSymbol") String productSymbol) {
         return productService.getProductBySymbol(productSymbol)
-                .map(productMapper::productToDtoMapper)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 
     /**
      * Metoda obsługująca POST:/products
@@ -66,10 +56,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Void> postProducts(@RequestBody List<ProductDto> productsDto) {
-        List<Product> products = productsDto.stream()
-                .map(productMapper::productDtoToEntityMapper)
-                .collect(Collectors.toList());
-        productService.insertProducts(products);
+        productService.insertProducts(productsDto);
         return ResponseEntity.ok().build();
     }
 
@@ -81,8 +68,7 @@ public class ProductController {
      */
     @PostMapping("/product")
     public ResponseEntity<Void> postProducts(@RequestBody ProductDto productDto) {
-        Product product = productMapper.productDtoToEntityMapper(productDto);
-        productService.insertProduct(product);
+        productService.insertProduct(productDto);
         return ResponseEntity.ok().build();
     }
 
@@ -95,17 +81,10 @@ public class ProductController {
      */
 
     @PutMapping("/{productSymbol}")
-    public ResponseEntity<Void> putProducts(@PathVariable String productSymbol, @RequestBody ProductDto productDto) {
-        Optional<Product> currentProduct = productService.getProductById(productSymbol);
-
-        if (currentProduct.isPresent()) {
-            Product product = productMapper.productDtoToEntityMapper(productDto);
-            productService.updateProductById(productSymbol, product);
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-
+    public ResponseEntity<ProductDto> putProducts(@PathVariable String productSymbol, @RequestBody ProductDto productDto) {
+        return productService.updateProductBySymbol(productSymbol, productDto)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
 
