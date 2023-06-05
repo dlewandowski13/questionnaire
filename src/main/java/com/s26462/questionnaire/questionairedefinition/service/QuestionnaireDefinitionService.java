@@ -2,6 +2,7 @@ package com.s26462.questionnaire.questionairedefinition.service;
 
 import com.s26462.questionnaire.exception.CannotModifyException;
 import com.s26462.questionnaire.exception.DateNotMatchException;
+import com.s26462.questionnaire.exception.EntityNotFoundException;
 import com.s26462.questionnaire.exception.FailToPublicateQuestionnaireDefinitionException;
 import com.s26462.questionnaire.questionairedefinition.collection.QuestionnaireDefinition;
 import com.s26462.questionnaire.questionairedefinition.dto.PublicateQuestionnaireDefinitionDto;
@@ -142,8 +143,6 @@ public class QuestionnaireDefinitionService {
                 .forEach(result -> {});
     }
 
-
-
     private List<Optional<QuestionnaireDefinitionDto>> findPublicateQuestionnaireDefinition(Date now) {
         return Optional.ofNullable(now)
                 .map(date -> questionnaireDefinitionRepository.findCustomQuestionnaireDefinition(date)
@@ -168,5 +167,18 @@ public class QuestionnaireDefinitionService {
         return Optional.of(questionnaireDefinitionMapper.questionnaireDefinitionToDtoMapper(updatedQuestionnaire));
     }
 
+
+    public void deleteQuestionnaireDefinitionBySymbol(String questionnaireDefinitionSymbol) {
+        questionnaireDefinitionRepository.findBySymbol(questionnaireDefinitionSymbol)
+                .ifPresentOrElse(questionnaireDefinition -> {
+                    if (questionnaireDefinition.getPublicationDate() != null) {
+                        throw new CannotModifyException("Nie można usunąć już raz opublikowanej ankiety.");
+                    }
+                    questionnaireDefinitionRepository.delete(questionnaireDefinition);
+                }, () -> {
+                    throw new EntityNotFoundException(
+                            String.format("Nie znaleziono ankiety o symbolu %s", questionnaireDefinitionSymbol));
+                });
+    }
 
 }

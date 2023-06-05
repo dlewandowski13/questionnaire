@@ -66,4 +66,11 @@ public class QuestionnaireDefinitionController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @DeleteMapping("/{questionnaireDefinitionSymbol}")
+    public ResponseEntity<Void> deleteQuestionnaireDefinitionBySymbol(
+            @PathVariable String questionnaireDefinitionSymbol) {
+            questionnaireDefinitionService.deleteQuestionnaireDefinitionBySymbol(questionnaireDefinitionSymbol);
+            return ResponseEntity.noContent().build();
+    }
+
 }
