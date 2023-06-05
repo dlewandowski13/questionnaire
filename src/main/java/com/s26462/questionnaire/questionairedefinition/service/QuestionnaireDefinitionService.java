@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.stream.Stream;
 
 @Service
 @Log4j2
@@ -54,21 +56,26 @@ public class QuestionnaireDefinitionService {
 
     public Optional<QuestionnaireDefinitionDto> updateQuestionnaireDefinitionBySymbol(
             String questionnaireDefinitionSymbol, QuestionnaireDefinitionDto questionnaireDefinitionDto) {
-        findPublicateQuestionnaireDefinition(new Date())
-                .filter(publicatedQuestionnaire -> publicatedQuestionnaire.getSymbol().equals(questionnaireDefinitionSymbol))
-                .ifPresent(publicatedQuestionnaire -> {
-                    throw new CannotModifyException("Nie można edytować opublikowanej ankiety");
-                });
+
+        List<Optional<QuestionnaireDefinitionDto>> publicatedQuestionnaireList =
+                findPublicateQuestionnaireDefinition(new Date());
+
+        boolean isPublicated =
+                publicatedQuestionnaireList.stream()
+                        .anyMatch(publicatedQuestionnaire ->
+                                publicatedQuestionnaire.map(QuestionnaireDefinitionDto::getSymbol)
+                                        .filter(symbol -> symbol.equals(questionnaireDefinitionSymbol))
+                                        .isPresent());
+
+        if (isPublicated) {
+            throw new CannotModifyException("Nie można edytować opublikowanej ankiety");
+        }
+
         return questionnaireDefinitionRepository.findBySymbol(questionnaireDefinitionSymbol)
-                .map(existingQuestionnaire -> {
-                    QuestionnaireDefinition questionnaireDefinition =
-                            questionnaireDefinitionMapper.questionnaireDefinitionDtoToQuestionnaireDefinitionMapper(
-                                    questionnaireDefinitionDto);
-                    questionnaireDefinition.setId(existingQuestionnaire.getId());
-                    questionnaireDefinitionRepository.save(questionnaireDefinition);
-                    return questionnaireDefinitionMapper.questionnaireDefinitionToDtoMapper(questionnaireDefinition);
-                });
+                .flatMap(existingQuestionnaire ->
+                        updateQuestionnaireDefinition(existingQuestionnaire, questionnaireDefinitionDto));
     }
+
 
     public Optional<QuestionnaireDefinitionDto> publicateQuestionnaireDefinition(
             String questionnaireDefinitionSymbol,
@@ -77,20 +84,38 @@ public class QuestionnaireDefinitionService {
 
         Optional<QuestionnaireDefinitionDto> publicatedQuestionnaireDefinitionDto =
                 getQuestionnaireDefinitionBySymbol(questionnaireDefinitionSymbol);
+        publicatedQuestionnaireDefinitionDto.ifPresent(publicatedDto -> {
+            if (publicatedDto.getPublicationDate() != null) {
+                throw new FailToPublicateQuestionnaireDefinitionException("Wskazana ankieta jest już opublikowana.");
+            }
+            publicatedDto.setPublicationDate(publicateQuestionnaireDefinitionDto.getPublicationDate());
+        });
 
-        Optional<QuestionnaireDefinitionDto> existingPublicateQuestionnaireDefinition =
+        List<Optional<QuestionnaireDefinitionDto>> existingPublicateQuestionnaireDefinitionList =
                 findPublicateQuestionnaireDefinition(new Date());
 
-        try {
-            existingPublicateQuestionnaireDefinition.ifPresent(questionnaireDefinitionDto ->
-                    questionnaireDefinitionDto.setExpiryDate(publicateQuestionnaireDefinitionDto.getPublicationDate()));
-            publicatedQuestionnaireDefinitionDto.ifPresent(questionnaireDefinitionDto ->
-                    questionnaireDefinitionDto.setPublicationDate(publicateQuestionnaireDefinitionDto.getPublicationDate()));
+        existingPublicateQuestionnaireDefinitionList.forEach(existingPublicateQuestionnaireDefinition ->
+                existingPublicateQuestionnaireDefinition.ifPresent(existingDto ->
+                existingDto.setExpiryDate(publicateQuestionnaireDefinitionDto.getPublicationDate())));
 
+        try {
             publicatedQuestionnaireDefinitionDto.flatMap(publicatedDto ->
-                    updateQuestionnaireDefinitionBySymbol(publicatedDto.getSymbol(), publicatedDto));
-            existingPublicateQuestionnaireDefinition.flatMap(existingDto ->
-                    updateQuestionnaireDefinitionBySymbol(existingDto.getSymbol(), existingDto));
+                    questionnaireDefinitionRepository.findBySymbol(publicatedDto.getSymbol())
+                            .flatMap(existingQuestionnaire -> updateQuestionnaireDefinition(existingQuestionnaire, publicatedDto))
+            );
+
+            existingPublicateQuestionnaireDefinitionList.stream()
+                    .flatMap(existingDtoOptional ->
+                            existingDtoOptional
+                                    .filter(existingDto -> existingDto.getExpiryDate().compareTo(new Date()) > 0)
+                                    .map(existingDto ->
+                                            questionnaireDefinitionRepository.findBySymbol(existingDto.getSymbol())
+                                                    .flatMap(publicatedQuestionnaire -> updateQuestionnaireDefinition(publicatedQuestionnaire, existingDto))
+                                                    .stream()
+                                    )
+                                    .orElseGet(Stream::empty)
+                    )
+                    .forEach(result -> {});
 
 
         } catch (FailToPublicateQuestionnaireDefinitionException ex) {
@@ -101,15 +126,29 @@ public class QuestionnaireDefinitionService {
         return publicatedQuestionnaireDefinitionDto;
     }
 
-    public Optional<QuestionnaireDefinitionDto> findPublicateQuestionnaireDefinition(Date now) {
+    private List<Optional<QuestionnaireDefinitionDto>> findPublicateQuestionnaireDefinition(Date now) {
         return Optional.ofNullable(now)
-                .flatMap(questionnaireDefinitionRepository::findCustomQuestionnaireDefinition)
-                .map(questionnaireDefinitionMapper::questionnaireDefinitionToDtoMapper);
+                .map(date -> questionnaireDefinitionRepository.findCustomQuestionnaireDefinition(date)
+                        .stream()
+                        .map(optional -> optional.map(questionnaireDefinitionMapper::questionnaireDefinitionToDtoMapper))
+                        .collect(Collectors.toList()))
+                .orElse(Collections.emptyList());
     }
 
-    public void validatePublicationDate(Date publicationDate) {
+    private void validatePublicationDate(Date publicationDate) {
         if (publicationDate.before(new Date())) {
             throw new DateNotMatchException("Data publikacji nie może być z przeszłości");
         }
     }
+
+    private Optional<QuestionnaireDefinitionDto> updateQuestionnaireDefinition(QuestionnaireDefinition existingQuestionnaire,
+                                                                               QuestionnaireDefinitionDto questionnaireDefinitionDto) {
+        QuestionnaireDefinition updatedQuestionnaire =
+                questionnaireDefinitionMapper.questionnaireDefinitionDtoToQuestionnaireDefinitionMapper(questionnaireDefinitionDto);
+        updatedQuestionnaire.setId(existingQuestionnaire.getId());
+        questionnaireDefinitionRepository.save(updatedQuestionnaire);
+        return Optional.of(questionnaireDefinitionMapper.questionnaireDefinitionToDtoMapper(updatedQuestionnaire));
+    }
+
+
 }
