@@ -61,6 +61,10 @@ public class QuestionnaireDefinitionService {
         List<Optional<QuestionnaireDefinitionDto>> publicatedQuestionnaireList =
                 findPublicateQuestionnaireDefinition(new Date());
 
+        if(questionnaireDefinitionDto.getExpiryDate() != null || questionnaireDefinitionDto.getPublicationDate() != null) {
+            throw new CannotModifyException("Niedozwolony sposób publikowania ankiety.");
+        }
+
         boolean isPublicated =
                 publicatedQuestionnaireList.stream()
                         .anyMatch(publicatedQuestionnaire ->
