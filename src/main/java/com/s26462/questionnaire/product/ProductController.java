@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,9 +29,7 @@ public class ProductController {
      */
     @GetMapping
     public ResponseEntity<List<ProductDto>> getProducts() {
-        List<ProductDto> products = productService.getProducts()
-                .orElse(Collections.emptyList());
-        return ResponseEntity.ok(products);
+        return ResponseEntity.ok(productService.getProducts());
     }
 
     /**
@@ -70,11 +67,10 @@ public class ProductController {
      */
     @PostMapping("/product")
     public ResponseEntity<Object> postProducts(@RequestBody ProductDto productDto) {
-        ProductDto createdProduct = productService.insertProduct(productDto);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{productSymbol}")
-                .buildAndExpand(createdProduct.getSymbol())
+                .buildAndExpand(productService.insertProduct(productDto).getSymbol())
                 .toUri();
         return ResponseEntity.created(location).build();
     }

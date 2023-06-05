@@ -48,4 +48,36 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, body,
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
+
+    @ExceptionHandler(DateNotMatchException.class)
+    public ResponseEntity<Object> handleDateNotMatchException(DateNotMatchException ex, WebRequest request) {
+        StringBuilder body = new StringBuilder();
+        body.append("Nieprawidłowa data.\n")
+                .append("Message: ")
+                .append(ex.getMessage());
+        return handleExceptionInternal(ex, body,
+                new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
+
+    @ExceptionHandler(FailToPublicateQuestionnaireDefinitionException.class)
+    public ResponseEntity<Object> handleFailToBublicQuestionnaireDefinitionException(
+            FailToPublicateQuestionnaireDefinitionException ex, WebRequest request) {
+        StringBuilder body = new StringBuilder();
+        body.append("Nie udało się opublikować ankiety.\n")
+                .append("Message: ")
+                .append(ex.getMessage());
+        return handleExceptionInternal(ex, body,
+                new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
+
+    @ExceptionHandler(CannotModifyException.class)
+    public ResponseEntity<Object> handleCannotModifyQuestionnaireDefinitionException(
+            CannotModifyException ex, WebRequest request) {
+        StringBuilder body = new StringBuilder();
+        body.append("Nie udało się opublikować ankiety.\n")
+                .append("Message: ")
+                .append(ex.getMessage());
+        return handleExceptionInternal(ex, body,
+                new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
 }
