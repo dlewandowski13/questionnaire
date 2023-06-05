@@ -30,9 +30,9 @@ public class ProductController {
      */
     @GetMapping
     public ResponseEntity<List<ProductDto>> getProducts() {
-        List<ProductDto> products = productService.getProducts()
-                .orElse(Collections.emptyList());
-        return ResponseEntity.ok(products);
+//        List<ProductDto> products = productService.getProducts()
+//                .orElse(Collections.emptyList());
+        return ResponseEntity.ok(productService.getProducts());
     }
 
     /**

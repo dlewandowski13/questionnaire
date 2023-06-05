@@ -49,12 +49,11 @@ public class ProductService {
      *
      * @return the products
      */
-    public Optional<List<ProductDto>> getProducts() {
-        List<Product> products = productRepository.findAll();
-        List<ProductDto> productsDto = products.stream()
+    public List<ProductDto> getProducts() {
+        return productRepository.findAll()
+                .stream()
                 .map(productMapper::productToDtoMapper)
                 .collect(Collectors.toList());
-        return Optional.of(productsDto);
     }
 
     /**
