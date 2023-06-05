@@ -1,8 +1,13 @@
 package com.s26462.questionnaire.questionairedefinition.collection.utils;
 
-import java.util.Map;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.LinkedHashMap;
+
+@Setter
+@Getter
 public class Question {
     private String question;
-    private Map<String, Answer> answers;
+    private LinkedHashMap<String, Answer> answerDefinition;
 }

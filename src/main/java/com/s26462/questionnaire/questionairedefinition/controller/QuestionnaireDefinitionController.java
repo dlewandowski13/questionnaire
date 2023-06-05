@@ -61,7 +61,9 @@ public class QuestionnaireDefinitionController {
     public ResponseEntity<QuestionnaireDefinitionDto> publicQuestionnaireDefinitionBySymbol(
             @PathVariable String questionnaireDefinitionSymbol,
             @RequestBody PublicateQuestionnaireDefinitionDto publicateQuestionnaireDefinitionDto) {
-        return questionnaireDefinitionService.publicate(questionnaireDefinitionSymbol, publicateQuestionnaireDefinitionDto);
+        return questionnaireDefinitionService.publicateQuestionnaireDefinition(questionnaireDefinitionSymbol, publicateQuestionnaireDefinitionDto)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }
