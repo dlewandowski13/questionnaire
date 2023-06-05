@@ -76,7 +76,6 @@ public class QuestionnaireDefinitionService {
                         updateQuestionnaireDefinition(existingQuestionnaire, questionnaireDefinitionDto));
     }
 
-
     public Optional<QuestionnaireDefinitionDto> publicateQuestionnaireDefinition(
             String questionnaireDefinitionSymbol,
             PublicateQuestionnaireDefinitionDto publicateQuestionnaireDefinitionDto) {
@@ -84,39 +83,24 @@ public class QuestionnaireDefinitionService {
 
         Optional<QuestionnaireDefinitionDto> publicatedQuestionnaireDefinitionDto =
                 getQuestionnaireDefinitionBySymbol(questionnaireDefinitionSymbol);
-        publicatedQuestionnaireDefinitionDto.ifPresent(publicatedDto -> {
+        publicatedQuestionnaireDefinitionDto.ifPresentOrElse(publicatedDto -> {
             if (publicatedDto.getPublicationDate() != null) {
                 throw new FailToPublicateQuestionnaireDefinitionException("Wskazana ankieta jest już opublikowana.");
             }
             publicatedDto.setPublicationDate(publicateQuestionnaireDefinitionDto.getPublicationDate());
+        }, () -> {
+            throw new FailToPublicateQuestionnaireDefinitionException(
+                    String.format("Nie znaleziono ankiety o symbolu %s", questionnaireDefinitionSymbol));
         });
 
         List<Optional<QuestionnaireDefinitionDto>> existingPublicateQuestionnaireDefinitionList =
                 findPublicateQuestionnaireDefinition(new Date());
 
-        existingPublicateQuestionnaireDefinitionList.forEach(existingPublicateQuestionnaireDefinition ->
-                existingPublicateQuestionnaireDefinition.ifPresent(existingDto ->
-                existingDto.setExpiryDate(publicateQuestionnaireDefinitionDto.getPublicationDate())));
+        updateExpiryDates(existingPublicateQuestionnaireDefinitionList, publicateQuestionnaireDefinitionDto);
 
         try {
-            publicatedQuestionnaireDefinitionDto.flatMap(publicatedDto ->
-                    questionnaireDefinitionRepository.findBySymbol(publicatedDto.getSymbol())
-                            .flatMap(existingQuestionnaire -> updateQuestionnaireDefinition(existingQuestionnaire, publicatedDto))
-            );
-
-            existingPublicateQuestionnaireDefinitionList.stream()
-                    .flatMap(existingDtoOptional ->
-                            existingDtoOptional
-                                    .filter(existingDto -> existingDto.getExpiryDate().compareTo(new Date()) > 0)
-                                    .map(existingDto ->
-                                            questionnaireDefinitionRepository.findBySymbol(existingDto.getSymbol())
-                                                    .flatMap(publicatedQuestionnaire -> updateQuestionnaireDefinition(publicatedQuestionnaire, existingDto))
-                                                    .stream()
-                                    )
-                                    .orElseGet(Stream::empty)
-                    )
-                    .forEach(result -> {});
-
+            updatePublicatedQuestionnaires(publicatedQuestionnaireDefinitionDto);
+            updateExistingPublicatedQuestionnaires(existingPublicateQuestionnaireDefinitionList);
 
         } catch (FailToPublicateQuestionnaireDefinitionException ex) {
             throw new FailToPublicateQuestionnaireDefinitionException(
@@ -125,6 +109,40 @@ public class QuestionnaireDefinitionService {
 
         return publicatedQuestionnaireDefinitionDto;
     }
+
+    private void updateExpiryDates(List<Optional<QuestionnaireDefinitionDto>> questionnaireDefinitionList,
+                                   PublicateQuestionnaireDefinitionDto publicateQuestionnaireDefinitionDto) {
+        questionnaireDefinitionList.forEach(existingPublicateQuestionnaireDefinition ->
+                existingPublicateQuestionnaireDefinition.ifPresent(existingDto -> {
+                    if (existingDto.getExpiryDate().compareTo(new Date()) > 0) {
+                        existingDto.setExpiryDate(publicateQuestionnaireDefinitionDto.getPublicationDate());
+                    }
+                }));
+    }
+
+    private void updatePublicatedQuestionnaires(Optional<QuestionnaireDefinitionDto> publicatedQuestionnaireDefinitionDto) {
+        publicatedQuestionnaireDefinitionDto.flatMap(publicatedDto ->
+                questionnaireDefinitionRepository.findBySymbol(publicatedDto.getSymbol())
+                        .flatMap(existingQuestionnaire -> updateQuestionnaireDefinition(existingQuestionnaire, publicatedDto))
+        );
+    }
+
+    private void updateExistingPublicatedQuestionnaires(List<Optional<QuestionnaireDefinitionDto>> questionnaireDefinitionList) {
+        questionnaireDefinitionList.stream()
+                .flatMap(existingDtoOptional ->
+                        existingDtoOptional
+                                .filter(existingDto -> existingDto.getExpiryDate().compareTo(new Date()) > 0)
+                                .map(existingDto ->
+                                        questionnaireDefinitionRepository.findBySymbol(existingDto.getSymbol())
+                                                .flatMap(publicatedQuestionnaire -> updateQuestionnaireDefinition(publicatedQuestionnaire, existingDto))
+                                                .stream()
+                                )
+                                .orElseGet(Stream::empty)
+                )
+                .forEach(result -> {});
+    }
+
+
 
     private List<Optional<QuestionnaireDefinitionDto>> findPublicateQuestionnaireDefinition(Date now) {
         return Optional.ofNullable(now)
