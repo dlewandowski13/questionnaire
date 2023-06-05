@@ -100,7 +100,6 @@ public class ProductService {
         return productRepository.findBySymbol(productSymbol)
                 .map(existingProduct -> {
                     Product updatedProduct = productMapper.productDtoToEntityMapper(productDto);
-                    updatedProduct.setSymbol(productSymbol);
                     productRepository.save(updatedProduct);
                     return productMapper.productToDtoMapper(updatedProduct);
                 });

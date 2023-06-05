@@ -29,6 +29,8 @@ public class QuestionnaireDefinition {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date creationDate;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date publicationDate;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date expiryDate;
     private List<Question> questions;
 }

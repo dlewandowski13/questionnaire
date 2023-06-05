@@ -48,4 +48,14 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, body,
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
+
+    @ExceptionHandler(DateNotMatchException.class)
+    public ResponseEntity<Object> handleDateNotMatchException(EntityNotFoundException ex, WebRequest request) {
+        StringBuilder body = new StringBuilder();
+        body.append("Nieprawidłowa data.\n")
+                .append("Message: ")
+                .append(ex.getMessage());
+        return handleExceptionInternal(ex, body,
+                new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
 }
