@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 
 @Setter
 @Getter
-public class Question {
+public class QuestionDefinition {
     private String question;
-    private LinkedHashMap<String, Answer> answerDefinition;
+    private LinkedHashMap<String, AnswerDefinition> answerDefinition;
 }

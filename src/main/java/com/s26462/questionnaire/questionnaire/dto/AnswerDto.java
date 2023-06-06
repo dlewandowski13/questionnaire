@@ -1,13 +1,13 @@
-package com.s26462.questionnaire.questionairedefinition.collection.utils;
+package com.s26462.questionnaire.questionnaire.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
 
-@Setter
 @Getter
-public class Answer {
+@Setter
+public class AnswerDto {
     private String description;
     private List<String> eliminatedProducts;
 }

@@ -1,10 +1,10 @@
 package com.s26462.questionnaire.questionairedefinition.mapper;
 
 import com.s26462.questionnaire.questionairedefinition.collection.QuestionnaireDefinition;
-import com.s26462.questionnaire.questionairedefinition.collection.utils.Answer;
-import com.s26462.questionnaire.questionairedefinition.collection.utils.Question;
-import com.s26462.questionnaire.questionairedefinition.dto.AnswerDto;
-import com.s26462.questionnaire.questionairedefinition.dto.QuestionDto;
+import com.s26462.questionnaire.questionairedefinition.collection.utils.AnswerDefinition;
+import com.s26462.questionnaire.questionairedefinition.collection.utils.QuestionDefinition;
+import com.s26462.questionnaire.questionairedefinition.dto.AnswerDefinitionDto;
+import com.s26462.questionnaire.questionairedefinition.dto.QuestionDefinitionDto;
 import com.s26462.questionnaire.questionairedefinition.dto.QuestionnaireDefinitionDto;
 import com.s26462.questionnaire.questionairedefinition.dto.QuestionnairesDefinitionsDto;
 import org.modelmapper.ModelMapper;
@@ -23,16 +23,6 @@ public class QuestionnaireDefinitionMapper {
         this.modelMapper = modelMapper;
     }
 
-//    public QuestionnaireDefinitionDto questionnaireDefinitionToDtoMapper(
-//            QuestionnaireDefinition questionnaireDefinition) {
-//        return modelMapper.map(questionnaireDefinition, QuestionnaireDefinitionDto.class);
-//    }
-
-//    public QuestionnaireDefinition questionnaireDefinitionDtoToQuestionnaireDefinitionMapper(
-//            QuestionnaireDefinitionDto questionnaireDefinitionDto) {
-//        return modelMapper.map(questionnaireDefinitionDto, QuestionnaireDefinition.class);
-//    }
-
     public QuestionnairesDefinitionsDto questionnairesDefinitionsToDtoMapper(QuestionnaireDefinition questionnaireDefinition) {
         return modelMapper.map(questionnaireDefinition, QuestionnairesDefinitionsDto.class);
     }
@@ -40,63 +30,63 @@ public class QuestionnaireDefinitionMapper {
     public QuestionnaireDefinitionDto questionnaireDefinitionToDtoMapper(QuestionnaireDefinition questionnaireDefinition) {
         QuestionnaireDefinitionDto questionnaireDefinitionDto = modelMapper.map(questionnaireDefinition, QuestionnaireDefinitionDto.class);
 
-        List<Question> questions = questionnaireDefinition.getQuestions();
-        List<QuestionDto> questionDtos = questions.stream()
+        List<QuestionDefinition> questionDefinitions = questionnaireDefinition.getQuestionDefinitions();
+        List<QuestionDefinitionDto> questionDefinitionDtos = questionDefinitions.stream()
                 .map(this::mapQuestionToQuestionDto)
                 .collect(Collectors.toList());
 
-        questionnaireDefinitionDto.setQuestions(questionDtos);
+        questionnaireDefinitionDto.setQuestionDefinitions(questionDefinitionDtos);
         return questionnaireDefinitionDto;
     }
 
     public QuestionnaireDefinition questionnaireDefinitionDtoToQuestionnaireDefinitionMapper(QuestionnaireDefinitionDto questionnaireDefinitionDto) {
         QuestionnaireDefinition questionnaireDefinition = modelMapper.map(questionnaireDefinitionDto, QuestionnaireDefinition.class);
 
-        List<QuestionDto> questionDtos = questionnaireDefinitionDto.getQuestions();
-        List<Question> questions = questionDtos.stream()
+        List<QuestionDefinitionDto> questionDefinitionDtos = questionnaireDefinitionDto.getQuestionDefinitions();
+        List<QuestionDefinition> questionDefinitions = questionDefinitionDtos.stream()
                 .map(this::mapQuestionDtoToQuestion)
                 .collect(Collectors.toList());
 
-        questionnaireDefinition.setQuestions(questions);
+        questionnaireDefinition.setQuestionDefinitions(questionDefinitions);
         return questionnaireDefinition;
     }
 
-    private Question mapQuestionDtoToQuestion(QuestionDto questionDto) {
-        Question question = new Question();
-        question.setQuestion(questionDto.getQuestion());
+    private QuestionDefinition mapQuestionDtoToQuestion(QuestionDefinitionDto questionDefinitionDto) {
+        QuestionDefinition questionDefinition = new QuestionDefinition();
+        questionDefinition.setQuestion(questionDefinitionDto.getQuestion());
 
-        LinkedHashMap<String, AnswerDto> answerDtos = questionDto.getAnswerDefinition();
-        LinkedHashMap<String, Answer> answers = answerDtos.entrySet().stream()
+        LinkedHashMap<String, AnswerDefinitionDto> answerDtos = questionDefinitionDto.getAnswerDefinition();
+        LinkedHashMap<String, AnswerDefinition> answers = answerDtos.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> mapAnswerDtoToAnswer(entry.getValue()), (a, b) -> a, LinkedHashMap::new));
 
-        question.setAnswerDefinition(answers);
-        return question;
+        questionDefinition.setAnswerDefinition(answers);
+        return questionDefinition;
     }
 
-    private Answer mapAnswerDtoToAnswer(AnswerDto answerDto) {
-        Answer answer = new Answer();
-        answer.setDescription(answerDto.getDescription());
-        answer.setEliminatedProducts(answerDto.getEliminatedProducts());
-        return answer;
+    private AnswerDefinition mapAnswerDtoToAnswer(AnswerDefinitionDto answerDefinitionDto) {
+        AnswerDefinition answerDefinition = new AnswerDefinition();
+        answerDefinition.setDescription(answerDefinitionDto.getDescription());
+        answerDefinition.setEliminatedProducts(answerDefinitionDto.getEliminatedProducts());
+        return answerDefinition;
     }
 
-    private QuestionDto mapQuestionToQuestionDto(Question question) {
-        QuestionDto questionDto = new QuestionDto();
-        questionDto.setQuestion(question.getQuestion());
+    private QuestionDefinitionDto mapQuestionToQuestionDto(QuestionDefinition questionDefinition) {
+        QuestionDefinitionDto questionDefinitionDto = new QuestionDefinitionDto();
+        questionDefinitionDto.setQuestion(questionDefinition.getQuestion());
 
-        LinkedHashMap<String, Answer> answers = question.getAnswerDefinition();
-        LinkedHashMap<String, AnswerDto> answerDtos = answers.entrySet().stream()
+        LinkedHashMap<String, AnswerDefinition> answers = questionDefinition.getAnswerDefinition();
+        LinkedHashMap<String, AnswerDefinitionDto> answerDtos = answers.entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey, entry -> mapAnswerToAnswerDto(entry.getValue()), (a, b) -> a, LinkedHashMap::new));
 
-        questionDto.setAnswerDefinition(answerDtos);
-        return questionDto;
+        questionDefinitionDto.setAnswerDefinition(answerDtos);
+        return questionDefinitionDto;
     }
 
-    private AnswerDto mapAnswerToAnswerDto(Answer answer) {
-        AnswerDto answerDto = new AnswerDto();
-        answerDto.setDescription(answer.getDescription());
-        answerDto.setEliminatedProducts(answer.getEliminatedProducts());
-        return answerDto;
+    private AnswerDefinitionDto mapAnswerToAnswerDto(AnswerDefinition answerDefinition) {
+        AnswerDefinitionDto answerDefinitionDto = new AnswerDefinitionDto();
+        answerDefinitionDto.setDescription(answerDefinition.getDescription());
+        answerDefinitionDto.setEliminatedProducts(answerDefinition.getEliminatedProducts());
+        return answerDefinitionDto;
     }
 
 }

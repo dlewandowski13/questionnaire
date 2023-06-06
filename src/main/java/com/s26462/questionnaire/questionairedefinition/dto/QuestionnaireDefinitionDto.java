@@ -17,5 +17,5 @@ public class QuestionnaireDefinitionDto {
     private Date publicationDate;
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private Date expiryDate;
-    private List<QuestionDto> questions;
+    private List<QuestionDefinitionDto> questionDefinitions;
 }
