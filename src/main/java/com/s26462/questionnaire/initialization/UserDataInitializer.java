@@ -18,10 +18,17 @@ public class UserDataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        User userAdmin = new User();
+        userAdmin.setUsername("admin");
+        userAdmin.setPassword(passwordEncoder.encode("admin"));
+        userAdmin.setRole(Role.ADMIN);
+        if (userRepository.findByUsername(userAdmin.getUsername()).isEmpty()) {
+            userRepository.save(userAdmin);
+        }
         User user = new User();
-        user.setUsername("admin");
-        user.setPassword(passwordEncoder.encode("admin"));
-        user.setRole(Role.ADMIN);
+        user.setUsername("user");
+        user.setPassword(passwordEncoder.encode("user"));
+        user.setRole(Role.USER);
         if (userRepository.findByUsername(user.getUsername()).isEmpty()) {
             userRepository.save(user);
         }

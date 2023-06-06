@@ -46,7 +46,6 @@ public class ProductController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-
     /**
      * Metoda obsługująca POST:/products
      *
@@ -69,7 +68,7 @@ public class ProductController {
      */
     @PostMapping("/product")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Object> postProducts(@RequestBody ProductDto productDto) {
+    public ResponseEntity<Object> postProduct(@RequestBody ProductDto productDto) {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{productSymbol}")

@@ -41,7 +41,7 @@ public class QuestionnaireService {
 
     private QuestionnaireWithProductsDto designateProducts(QuestionnaireDto questionnaireDto) {
         List<QuestionDto> questions = questionnaireDto.getQuestions();
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.findAllActiveProducts();
         List<String> eliminatedProducts = getEliminatedProducts(questions);
 
         List<Product> productsToRemove = products.stream()
