@@ -1,6 +1,7 @@
 package com.s26462.questionnaire.product;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -54,6 +55,7 @@ public class ProductController {
      */
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> postProducts(@RequestBody List<ProductDto> productsDto) {
         productService.insertProducts(productsDto);
         return ResponseEntity.ok().build();
@@ -66,6 +68,7 @@ public class ProductController {
      * @return ok
      */
     @PostMapping("/product")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Object> postProducts(@RequestBody ProductDto productDto) {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -84,6 +87,7 @@ public class ProductController {
      */
 
     @PutMapping("/product/{productSymbol}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ProductDto> putProducts(@PathVariable String productSymbol, @RequestBody ProductDto productDto) {
         return productService.updateProductBySymbol(productSymbol, productDto)
                 .map(ResponseEntity::ok)
@@ -91,6 +95,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/product/{productSymbol}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteProduct(@PathVariable String productSymbol) {
         productService.deleteProductBySymbol(productSymbol);
         return ResponseEntity.noContent().build();

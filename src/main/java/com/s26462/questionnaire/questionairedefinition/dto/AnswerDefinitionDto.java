@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class AnswerDto {
+public class AnswerDefinitionDto {
     private String description;
     private List<String> eliminatedProducts;
 }

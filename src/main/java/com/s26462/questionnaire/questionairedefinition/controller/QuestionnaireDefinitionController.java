@@ -5,6 +5,7 @@ import com.s26462.questionnaire.questionairedefinition.dto.QuestionnaireDefiniti
 import com.s26462.questionnaire.questionairedefinition.dto.QuestionnairesDefinitionsDto;
 import com.s26462.questionnaire.questionairedefinition.service.QuestionnaireDefinitionService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -58,6 +59,7 @@ public class QuestionnaireDefinitionController {
     }
 
     @PatchMapping("/public/{questionnaireDefinitionSymbol}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<QuestionnaireDefinitionDto> publicQuestionnaireDefinitionBySymbol(
             @PathVariable String questionnaireDefinitionSymbol,
             @RequestBody PublicateQuestionnaireDefinitionDto publicateQuestionnaireDefinitionDto) {
