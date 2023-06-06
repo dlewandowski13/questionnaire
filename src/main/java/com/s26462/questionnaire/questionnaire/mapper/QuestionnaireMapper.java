@@ -6,6 +6,7 @@ import com.s26462.questionnaire.questionnaire.collection.utils.Question;
 import com.s26462.questionnaire.questionnaire.dto.AnswerDto;
 import com.s26462.questionnaire.questionnaire.dto.QuestionDto;
 import com.s26462.questionnaire.questionnaire.dto.QuestionnaireDto;
+import com.s26462.questionnaire.questionnaire.dto.QuestionnaireWithProductsDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
@@ -22,22 +23,31 @@ public class QuestionnaireMapper {
         this.modelMapper = modelMapper;
     }
 
-    public QuestionnaireDto questionnaireToDtoMapper(Questionnaire questionnaire) {
-        QuestionnaireDto questionnaireDto = modelMapper.map(questionnaire, QuestionnaireDto.class);
+    public QuestionnaireWithProductsDto mapToQuestionnaireWithProductsDto(QuestionnaireDto questionnaireDto) {
+        return modelMapper.map(questionnaireDto, QuestionnaireWithProductsDto.class);
+    }
+
+    public QuestionnaireDto mapToQuestionnaireDto(QuestionnaireWithProductsDto questionnaireWithProductsDto) {
+        return modelMapper.map(questionnaireWithProductsDto, QuestionnaireDto.class);
+    }
+
+    public QuestionnaireWithProductsDto questionnaireToDtoMapper(Questionnaire questionnaire) {
+        QuestionnaireWithProductsDto questionnaireWithProductsDtoDto
+                = modelMapper.map(questionnaire, QuestionnaireWithProductsDto.class);
 
         List<Question> questions = questionnaire.getQuestions();
         List<QuestionDto> questionDtos = questions.stream()
                 .map(this::mapQuestionToQuestionDto)
                 .collect(Collectors.toList());
 
-        questionnaireDto.setQuestions(questionDtos);
-        return questionnaireDto;
+        questionnaireWithProductsDtoDto.setQuestions(questionDtos);
+        return questionnaireWithProductsDtoDto;
     }
 
-    public Questionnaire questionnaireDtoToQuestionnaireMapper(QuestionnaireDto questionnaireDto) {
-        Questionnaire questionnaire = modelMapper.map(questionnaireDto, Questionnaire.class);
+    public Questionnaire questionnaireWithProductsDtoToQuestionnaireMapper(QuestionnaireWithProductsDto questionnaireWithProductsDto) {
+        Questionnaire questionnaire = modelMapper.map(questionnaireWithProductsDto, Questionnaire.class);
 
-        List<QuestionDto> questionDtos = questionnaireDto.getQuestions();
+        List<QuestionDto> questionDtos = questionnaireWithProductsDto.getQuestions();
         List<Question> questions = questionDtos.stream()
                 .map(this::mapQuestionDtoToQuestion)
                 .collect(Collectors.toList());

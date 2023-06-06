@@ -1,5 +1,6 @@
 package com.s26462.questionnaire.questionnaire.collection;
 
+import com.s26462.questionnaire.product.Product;
 import com.s26462.questionnaire.questionnaire.collection.utils.Insurer;
 import com.s26462.questionnaire.questionnaire.collection.utils.Question;
 import lombok.Data;
@@ -24,5 +25,6 @@ public class Questionnaire {
     private String creationDate;
     private Insurer insurer;
     private List<Question> questions;
+    private List<String> products;
 
 }
