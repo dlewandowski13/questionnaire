@@ -68,6 +68,7 @@ public class ProductController {
      * @return ok
      */
     @PostMapping("/product")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Object> postProducts(@RequestBody ProductDto productDto) {
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -86,6 +87,7 @@ public class ProductController {
      */
 
     @PutMapping("/product/{productSymbol}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ProductDto> putProducts(@PathVariable String productSymbol, @RequestBody ProductDto productDto) {
         return productService.updateProductBySymbol(productSymbol, productDto)
                 .map(ResponseEntity::ok)
@@ -93,6 +95,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/product/{productSymbol}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteProduct(@PathVariable String productSymbol) {
         productService.deleteProductBySymbol(productSymbol);
         return ResponseEntity.noContent().build();
