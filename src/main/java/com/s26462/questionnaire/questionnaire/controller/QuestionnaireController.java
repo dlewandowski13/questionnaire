@@ -1,12 +1,11 @@
 package com.s26462.questionnaire.questionnaire.controller;
 
 import com.s26462.questionnaire.questionnaire.dto.QuestionnaireDto;
+import com.s26462.questionnaire.questionnaire.dto.QuestionnaireWithProductsDto;
 import com.s26462.questionnaire.questionnaire.service.QuestionnaireService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -30,5 +29,13 @@ public class QuestionnaireController {
                 .buildAndExpand(questionnaireService.insertQuestionnaire(questionnaireDto).getId())
                 .toUri();
         return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping("/{questionnaireId}")
+    public ResponseEntity<QuestionnaireWithProductsDto> getQuestionnaire(
+            @PathVariable String questionnaireId) {
+        return questionnaireService.getQuestionnaireById(questionnaireId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

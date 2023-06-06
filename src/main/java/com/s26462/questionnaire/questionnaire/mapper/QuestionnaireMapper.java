@@ -31,7 +31,7 @@ public class QuestionnaireMapper {
         return modelMapper.map(questionnaireWithProductsDto, QuestionnaireDto.class);
     }
 
-    public QuestionnaireWithProductsDto questionnaireToDtoMapper(Questionnaire questionnaire) {
+    public QuestionnaireWithProductsDto questionnaireToQuestionnaireWithProductsDtoMapper(Questionnaire questionnaire) {
         QuestionnaireWithProductsDto questionnaireWithProductsDtoDto
                 = modelMapper.map(questionnaire, QuestionnaireWithProductsDto.class);
 

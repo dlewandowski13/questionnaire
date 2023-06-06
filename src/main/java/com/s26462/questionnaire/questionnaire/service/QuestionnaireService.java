@@ -2,7 +2,6 @@ package com.s26462.questionnaire.questionnaire.service;
 
 import com.s26462.questionnaire.product.Product;
 import com.s26462.questionnaire.product.ProductRepository;
-import com.s26462.questionnaire.questionnaire.dto.AnswerDto;
 import com.s26462.questionnaire.questionnaire.dto.QuestionDto;
 import com.s26462.questionnaire.questionnaire.dto.QuestionnaireDto;
 import com.s26462.questionnaire.questionnaire.dto.QuestionnaireWithProductsDto;
@@ -10,10 +9,9 @@ import com.s26462.questionnaire.questionnaire.mapper.QuestionnaireMapper;
 import com.s26462.questionnaire.questionnaire.repository.QuestionnaireRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 
 @Service
@@ -30,11 +28,15 @@ public class QuestionnaireService {
     }
 
     public QuestionnaireWithProductsDto insertQuestionnaire(QuestionnaireDto questionnaireDto) {
-        QuestionnaireWithProductsDto questionnaireWithProductsDto = designateProducts(questionnaireDto);
-        questionnaireRepository.insert(
+        return questionnaireMapper.questionnaireToQuestionnaireWithProductsDtoMapper(questionnaireRepository.insert(
                 questionnaireMapper.questionnaireWithProductsDtoToQuestionnaireMapper(
-                        questionnaireWithProductsDto));
-        return questionnaireWithProductsDto;
+                        designateProducts(questionnaireDto))));
+    }
+
+    public Optional<QuestionnaireWithProductsDto> getQuestionnaireById(String questionnaireId) {
+        return Optional.ofNullable(questionnaireId)
+                .flatMap(questionnaireRepository::findById)
+                .map(questionnaireMapper::questionnaireToQuestionnaireWithProductsDtoMapper);
     }
 
     private QuestionnaireWithProductsDto designateProducts(QuestionnaireDto questionnaireDto) {
@@ -56,8 +58,6 @@ public class QuestionnaireService {
 
         return questionnaireWithProductsDto;
     }
-
-
 
     private List<String> getEliminatedProducts(List<QuestionDto> questions) {
         return questions.stream()
