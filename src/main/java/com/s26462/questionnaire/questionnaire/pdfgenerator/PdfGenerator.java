@@ -1,5 +1,7 @@
 package com.s26462.questionnaire.questionnaire.pdfgenerator;
 
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
 import com.s26462.questionnaire.exception.FailedToGeneratePdfException;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
@@ -18,6 +20,8 @@ public class PdfGenerator {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(baos));
             Document document = new Document(pdfDocument);
 
+            PdfFont font = PdfFontFactory.createFont("src/main/resources/fonts/arial.ttf", PdfFontFactory.EmbeddingStrategy.FORCE_EMBEDDED);
+
             Field[] fields = QuestionnaireWithProductsDto.class.getDeclaredFields();
             for (Field field : fields) {
                 field.setAccessible(true);
@@ -25,7 +29,7 @@ public class PdfGenerator {
                 String fieldName = field.getName();
                 String fieldValue = value != null ? value.toString() : "";
 
-                document.add(new Paragraph(fieldName + ": " + fieldValue));
+                document.add(new Paragraph(fieldName + ": " + fieldValue).setFont(font));
             }
 
             document.close();
