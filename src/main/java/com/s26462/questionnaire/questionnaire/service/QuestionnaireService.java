@@ -6,13 +6,13 @@ import com.s26462.questionnaire.questionnaire.dto.QuestionDto;
 import com.s26462.questionnaire.questionnaire.dto.QuestionnaireDto;
 import com.s26462.questionnaire.questionnaire.dto.QuestionnaireWithProductsDto;
 import com.s26462.questionnaire.questionnaire.mapper.QuestionnaireMapper;
+import com.s26462.questionnaire.questionnaire.pdfgenerator.PdfGenerator;
 import com.s26462.questionnaire.questionnaire.repository.QuestionnaireRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
 
 @Service
 public class QuestionnaireService {
@@ -70,4 +70,9 @@ public class QuestionnaireService {
     }
 
 
+    public byte[] getQuestionnairePdfById(String questionnaireId) {
+        return getQuestionnaireById(questionnaireId)
+                .map(PdfGenerator::generatePdfFromQuestionnaire)
+                .orElseThrow();
+    }
 }

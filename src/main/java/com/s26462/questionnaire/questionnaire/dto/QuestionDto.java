@@ -10,4 +10,12 @@ import java.util.LinkedHashMap;
 public class QuestionDto {
     private String question;
     private LinkedHashMap<String, AnswerDto> answer;
+
+    @Override
+    public String toString() {
+        return  "Pytanie: " + question + '\n' +
+                "Odpowiedź: " + answer + '\n';
+    }
+
+
 }
