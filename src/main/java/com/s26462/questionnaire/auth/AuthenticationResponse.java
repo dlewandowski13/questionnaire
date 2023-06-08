@@ -5,6 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Klasa reprezentująca strukturę odpowiedzi
+ * na żądanie autoryzaci i rejestracji.
+ *
+ * @author dawid
+ */
 @Data
 @Builder
 @AllArgsConstructor

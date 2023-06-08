@@ -5,6 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Żądanie rejestracji użytkownika.
+ *
+ * @author dawid
+ */
 @Data
 @Builder
 @AllArgsConstructor

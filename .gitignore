@@ -103,3 +103,5 @@ build/
 /database/db/journal/WiredTigerLog.0000000037
 /database/db/journal/WiredTigerPreplog.0000000001
 /database/db/journal/WiredTigerPreplog.0000000002
+/database/db/diagnostic.data/metrics.2023-06-08T09-16-04Z-00000
+/database/db/journal/WiredTigerLog.0000000038

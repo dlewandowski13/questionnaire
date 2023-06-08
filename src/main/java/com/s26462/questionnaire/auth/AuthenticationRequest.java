@@ -5,6 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Klasa reprezentująca strukturę żądania autentykacji.
+ *
+ * @author dawid
+ */
 @Data
 @Builder
 @AllArgsConstructor

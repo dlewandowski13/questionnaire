@@ -10,6 +10,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * Serwis służący do obsługi modułu autentykacji
+ *
+ * @author dawid
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -18,10 +23,17 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    public AuthenticationResponse register(ReqisterRequest request) {
+
+    /**
+     * Obsługa rejestracji użytkownika.
+     *
+     * @param reqisterRequest żądanie rejestracji
+     * @return wygenerowany token autoryzacyjny
+     */
+    public AuthenticationResponse register(ReqisterRequest reqisterRequest) {
         var user = User.builder()
-                .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
+                .username(reqisterRequest.getUsername())
+                .password(passwordEncoder.encode(reqisterRequest.getPassword()))
                 .role(Role.USER)
                 .build();
         var jwtToken = jwtService.generateToken(user);
@@ -31,14 +43,20 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    /**
+     * Obsługa autoryzacji użytkownika.
+     *
+     * @param authenticationRequest żądanie rejestracji
+     * @return wygenerowany token autoryzacyjny
+     */
+    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
+                        authenticationRequest.getUsername(),
+                        authenticationRequest.getPassword()
                 )
         );
-        var user = userRepository.findByUsername(request.getUsername())
+        var user = userRepository.findByUsername(authenticationRequest.getUsername())
                 .orElseThrow();
         return AuthenticationResponse.builder()
                 .token(jwtService.generateToken(user))
