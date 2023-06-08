@@ -80,4 +80,15 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, body,
                 new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
+
+    @ExceptionHandler(FailedToGeneratePdfException.class)
+    public ResponseEntity<Object> handleFailedToGeneratePdfException(
+            FailedToGeneratePdfException ex, WebRequest request) {
+        StringBuilder body = new StringBuilder();
+        body.append("Wygenerować pdf.\n")
+                .append("Message: ")
+                .append(ex.getMessage());
+        return handleExceptionInternal(ex, body,
+                new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
+    }
 }

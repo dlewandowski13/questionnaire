@@ -4,6 +4,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -20,5 +21,8 @@ public interface ProductRepository extends MongoRepository<Product, String> {
      */
     @Query("{ symbol: ?0 }")
     Optional<Product> findBySymbol(String productSymbol);
+
+    @Query("{ 'isActive' : true }")
+    List<Product> findAllActiveProducts();
 
 }

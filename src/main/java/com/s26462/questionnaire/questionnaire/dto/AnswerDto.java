@@ -10,4 +10,13 @@ import java.util.List;
 public class AnswerDto {
     private String description;
     private List<String> eliminatedProducts;
+
+    @Override
+    public String toString() {
+        String eliminatedProductsString = (eliminatedProducts != null) ? eliminatedProducts.toString() : "brak";
+
+        return "Odpowiedź: " + description + '\n' +
+                "Wyeliminowane produkty: " + eliminatedProductsString + '\n';
+    }
+
 }
