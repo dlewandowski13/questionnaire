@@ -11,6 +11,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * The type Questionnaire definition.
+ */
 @Data
 @NoArgsConstructor
 @Document(collection = "questionnaireDefinition")

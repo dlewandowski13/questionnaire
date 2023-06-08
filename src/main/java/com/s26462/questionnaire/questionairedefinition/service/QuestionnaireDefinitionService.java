@@ -20,12 +20,21 @@ import java.util.stream.Collectors;
 import java.util.Collections;
 import java.util.stream.Stream;
 
+/**
+ * The type Questionnaire definition service.
+ */
 @Service
 @Log4j2
 public class QuestionnaireDefinitionService {
     private final QuestionnaireDefinitionRepository questionnaireDefinitionRepository;
     private final QuestionnaireDefinitionMapper questionnaireDefinitionMapper;
 
+    /**
+     * Instantiates a new Questionnaire definition service.
+     *
+     * @param questionnaireDefinitionRepository the questionnaire definition repository
+     * @param questionnaireDefinitionMapper     the questionnaire definition mapper
+     */
     public QuestionnaireDefinitionService(
             QuestionnaireDefinitionRepository questionnaireDefinitionRepository,
             QuestionnaireDefinitionMapper questionnaireDefinitionMapper) {
@@ -33,6 +42,11 @@ public class QuestionnaireDefinitionService {
         this.questionnaireDefinitionMapper = questionnaireDefinitionMapper;
     }
 
+    /**
+     * Gets questionnaires definitions.
+     *
+     * @return the questionnaires definitions
+     */
     public List<QuestionnairesDefinitionsDto> getQuestionnairesDefinitions() {
         return questionnaireDefinitionRepository.findAll()
                 .stream()
@@ -40,6 +54,12 @@ public class QuestionnaireDefinitionService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Gets questionnaire definition by symbol.
+     *
+     * @param questionnaireDefinitionSymbol the questionnaire definition symbol
+     * @return the questionnaire definition by symbol
+     */
     public Optional<QuestionnaireDefinitionDto> getQuestionnaireDefinitionBySymbol(
             String questionnaireDefinitionSymbol) {
         return Optional.ofNullable(questionnaireDefinitionSymbol)
@@ -47,6 +67,12 @@ public class QuestionnaireDefinitionService {
                 .map(questionnaireDefinitionMapper::questionnaireDefinitionToDtoMapper);
     }
 
+    /**
+     * Insert questionnaire definition questionnaire definition dto.
+     *
+     * @param questionnaireDefinitionDto the questionnaire definition dto
+     * @return the questionnaire definition dto
+     */
     public QuestionnaireDefinitionDto insertQuestionnaireDefinition(
             QuestionnaireDefinitionDto questionnaireDefinitionDto) {
         return questionnaireDefinitionMapper.questionnaireDefinitionToDtoMapper(
@@ -55,6 +81,13 @@ public class QuestionnaireDefinitionService {
                                                 questionnaireDefinitionDto)));
     }
 
+    /**
+     * Update questionnaire definition by symbol optional.
+     *
+     * @param questionnaireDefinitionSymbol the questionnaire definition symbol
+     * @param questionnaireDefinitionDto    the questionnaire definition dto
+     * @return the optional
+     */
     public Optional<QuestionnaireDefinitionDto> updateQuestionnaireDefinitionBySymbol(
             String questionnaireDefinitionSymbol, QuestionnaireDefinitionDto questionnaireDefinitionDto) {
 
@@ -81,6 +114,13 @@ public class QuestionnaireDefinitionService {
                         updateQuestionnaireDefinition(existingQuestionnaire, questionnaireDefinitionDto));
     }
 
+    /**
+     * Publicate questionnaire definition optional.
+     *
+     * @param questionnaireDefinitionSymbol       the questionnaire definition symbol
+     * @param publicateQuestionnaireDefinitionDto the publicate questionnaire definition dto
+     * @return the optional
+     */
     public Optional<QuestionnaireDefinitionDto> publicateQuestionnaireDefinition(
             String questionnaireDefinitionSymbol,
             PublicateQuestionnaireDefinitionDto publicateQuestionnaireDefinitionDto) {
@@ -172,6 +212,11 @@ public class QuestionnaireDefinitionService {
     }
 
 
+    /**
+     * Delete questionnaire definition by symbol.
+     *
+     * @param questionnaireDefinitionSymbol the questionnaire definition symbol
+     */
     public void deleteQuestionnaireDefinitionBySymbol(String questionnaireDefinitionSymbol) {
         questionnaireDefinitionRepository.findBySymbol(questionnaireDefinitionSymbol)
                 .ifPresentOrElse(questionnaireDefinition -> {

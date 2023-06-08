@@ -5,6 +5,9 @@ import lombok.Setter;
 
 import java.util.LinkedHashMap;
 
+/**
+ * The type Question definition dto.
+ */
 @Getter
 @Setter
 public class QuestionDefinitionDto {

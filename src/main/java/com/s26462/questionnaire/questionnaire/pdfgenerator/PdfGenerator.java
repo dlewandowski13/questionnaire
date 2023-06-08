@@ -12,8 +12,18 @@ import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
+
+/**
+ * The type Pdf generator.
+ */
 @Component
 public class PdfGenerator {
+    /**
+     * Generate pdf from questionnaire byte [ ].
+     *
+     * @param questionnaireWithProductsDto the questionnaire with products dto
+     * @return the byte [ ]
+     */
     public static byte[] generatePdfFromQuestionnaire(QuestionnaireWithProductsDto questionnaireWithProductsDto) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -11,6 +11,11 @@ public class ProductMapper {
 
     private final ModelMapper modelMapper;
 
+    /**
+     * Instantiates a new Product mapper.
+     *
+     * @param modelMapper the model mapper
+     */
     public ProductMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }

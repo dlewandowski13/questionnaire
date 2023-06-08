@@ -8,6 +8,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+/**
+ * The type Questionnaire application.
+ */
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
@@ -15,6 +18,11 @@ import org.springframework.context.annotation.Import;
 @NoArgsConstructor
 public class QuestionnaireApplication {
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         SpringApplication.run(QuestionnaireApplication.class, args);
     }

@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * The type Authentication controller.
+ */
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -14,6 +17,12 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
+    /**
+     * Register response entity.
+     *
+     * @param request the request
+     * @return the response entity
+     */
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody ReqisterRequest request
@@ -21,6 +30,12 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.register(request));
     }
 
+    /**
+     * Register response entity.
+     *
+     * @param request the request
+     * @return the response entity
+     */
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> register(
             @RequestBody AuthenticationRequest request

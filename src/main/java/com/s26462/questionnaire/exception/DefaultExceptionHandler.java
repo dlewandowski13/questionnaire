@@ -49,6 +49,13 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
+    /**
+     * Handle date not match exception response entity.
+     *
+     * @param ex      the ex
+     * @param request the request
+     * @return the response entity
+     */
     @ExceptionHandler(DateNotMatchException.class)
     public ResponseEntity<Object> handleDateNotMatchException(DateNotMatchException ex, WebRequest request) {
         StringBuilder body = new StringBuilder();
@@ -59,6 +66,13 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
                 new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
+    /**
+     * Handle fail to bublic questionnaire definition exception response entity.
+     *
+     * @param ex      the ex
+     * @param request the request
+     * @return the response entity
+     */
     @ExceptionHandler(FailToPublicateQuestionnaireDefinitionException.class)
     public ResponseEntity<Object> handleFailToBublicQuestionnaireDefinitionException(
             FailToPublicateQuestionnaireDefinitionException ex, WebRequest request) {
@@ -70,6 +84,13 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
                 new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
+    /**
+     * Handle cannot modify questionnaire definition exception response entity.
+     *
+     * @param ex      the ex
+     * @param request the request
+     * @return the response entity
+     */
     @ExceptionHandler(CannotModifyException.class)
     public ResponseEntity<Object> handleCannotModifyQuestionnaireDefinitionException(
             CannotModifyException ex, WebRequest request) {
@@ -81,6 +102,13 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
                 new HttpHeaders(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
+    /**
+     * Handle failed to generate pdf exception response entity.
+     *
+     * @param ex      the ex
+     * @param request the request
+     * @return the response entity
+     */
     @ExceptionHandler(FailedToGeneratePdfException.class)
     public ResponseEntity<Object> handleFailedToGeneratePdfException(
             FailedToGeneratePdfException ex, WebRequest request) {

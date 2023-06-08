@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * The type Questionnaire service.
+ */
 @Service
 public class QuestionnaireService {
 
@@ -21,18 +24,37 @@ public class QuestionnaireService {
     private final QuestionnaireRepository questionnaireRepository;
     private final ProductRepository productRepository;
 
+    /**
+     * Instantiates a new Questionnaire service.
+     *
+     * @param questionnaireMapper     the questionnaire mapper
+     * @param questionnaireRepository the questionnaire repository
+     * @param productRepository       the product repository
+     */
     public QuestionnaireService(QuestionnaireMapper questionnaireMapper, QuestionnaireRepository questionnaireRepository, ProductRepository productRepository) {
         this.questionnaireMapper = questionnaireMapper;
         this.questionnaireRepository = questionnaireRepository;
         this.productRepository = productRepository;
     }
 
+    /**
+     * Insert questionnaire questionnaire with products dto.
+     *
+     * @param questionnaireDto the questionnaire dto
+     * @return the questionnaire with products dto
+     */
     public QuestionnaireWithProductsDto insertQuestionnaire(QuestionnaireDto questionnaireDto) {
         return questionnaireMapper.questionnaireToQuestionnaireWithProductsDtoMapper(questionnaireRepository.insert(
                 questionnaireMapper.questionnaireWithProductsDtoToQuestionnaireMapper(
                         designateProducts(questionnaireDto))));
     }
 
+    /**
+     * Gets questionnaire by id.
+     *
+     * @param questionnaireId the questionnaire id
+     * @return the questionnaire by id
+     */
     public Optional<QuestionnaireWithProductsDto> getQuestionnaireById(String questionnaireId) {
         return Optional.ofNullable(questionnaireId)
                 .flatMap(questionnaireRepository::findById)
@@ -70,6 +92,12 @@ public class QuestionnaireService {
     }
 
 
+    /**
+     * Get questionnaire pdf by id byte [ ].
+     *
+     * @param questionnaireId the questionnaire id
+     * @return the byte [ ]
+     */
     public byte[] getQuestionnairePdfById(String questionnaireId) {
         return getQuestionnaireById(questionnaireId)
                 .map(PdfGenerator::generatePdfFromQuestionnaire)

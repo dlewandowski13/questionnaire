@@ -13,16 +13,30 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
+/**
+ * The type Questionnaire definition controller.
+ */
 @Controller
 @RequestMapping("/questionnaireDefinition")
 public class QuestionnaireDefinitionController {
 
     private final QuestionnaireDefinitionService questionnaireDefinitionService;
 
+    /**
+     * Instantiates a new Questionnaire definition controller.
+     *
+     * @param questionnaireDefinitionService the questionnaire definition service
+     */
     public QuestionnaireDefinitionController(QuestionnaireDefinitionService questionnaireDefinitionService) {
         this.questionnaireDefinitionService = questionnaireDefinitionService;
     }
 
+    /**
+     * Post questionnaire definition response entity.
+     *
+     * @param questionnaireDefinitionDto the questionnaire definition dto
+     * @return the response entity
+     */
     @PostMapping
     public ResponseEntity<Object> postQuestionnaireDefinition(
             @RequestBody QuestionnaireDefinitionDto questionnaireDefinitionDto) {
@@ -35,11 +49,22 @@ public class QuestionnaireDefinitionController {
         return ResponseEntity.created(location).build();
     }
 
+    /**
+     * Gets questionnaires definitions.
+     *
+     * @return the questionnaires definitions
+     */
     @GetMapping("/list")
     public ResponseEntity<List<QuestionnairesDefinitionsDto>> getQuestionnairesDefinitions() {
         return ResponseEntity.ok(questionnaireDefinitionService.getQuestionnairesDefinitions());
     }
 
+    /**
+     * Gets questionnaire definition by symbol.
+     *
+     * @param questionnaireDefinitionSymbol the questionnaire definition symbol
+     * @return the questionnaire definition by symbol
+     */
     @GetMapping("/{questionnaireDefinitionSymbol}")
     public ResponseEntity<QuestionnaireDefinitionDto> getQuestionnaireDefinitionBySymbol(
             @PathVariable String questionnaireDefinitionSymbol) {
@@ -48,6 +73,13 @@ public class QuestionnaireDefinitionController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    /**
+     * Update questionnaire definition by symbol response entity.
+     *
+     * @param questionnaireDefinitionSymbol the questionnaire definition symbol
+     * @param questionnaireDefinitionDto    the questionnaire definition dto
+     * @return the response entity
+     */
     @PutMapping("/{questionnaireDefinitionSymbol}")
     public ResponseEntity<QuestionnaireDefinitionDto> updateQuestionnaireDefinitionBySymbol(
             @PathVariable String questionnaireDefinitionSymbol,
@@ -58,6 +90,13 @@ public class QuestionnaireDefinitionController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    /**
+     * Public questionnaire definition by symbol response entity.
+     *
+     * @param questionnaireDefinitionSymbol       the questionnaire definition symbol
+     * @param publicateQuestionnaireDefinitionDto the publicate questionnaire definition dto
+     * @return the response entity
+     */
     @PatchMapping("/public/{questionnaireDefinitionSymbol}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<QuestionnaireDefinitionDto> publicQuestionnaireDefinitionBySymbol(
@@ -68,6 +107,12 @@ public class QuestionnaireDefinitionController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    /**
+     * Delete questionnaire definition by symbol response entity.
+     *
+     * @param questionnaireDefinitionSymbol the questionnaire definition symbol
+     * @return the response entity
+     */
     @DeleteMapping("/{questionnaireDefinitionSymbol}")
     public ResponseEntity<Void> deleteQuestionnaireDefinitionBySymbol(
             @PathVariable String questionnaireDefinitionSymbol) {
