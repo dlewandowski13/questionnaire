@@ -15,18 +15,38 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * The type Questionnaire definition mapper.
+ */
 @Component
 public class QuestionnaireDefinitionMapper {
     private final ModelMapper modelMapper;
 
+    /**
+     * Instantiates a new Questionnaire definition mapper.
+     *
+     * @param modelMapper the model mapper
+     */
     public QuestionnaireDefinitionMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 
+    /**
+     * Questionnaires definitions to dto mapper questionnaires definitions dto.
+     *
+     * @param questionnaireDefinition the questionnaire definition
+     * @return the questionnaires definitions dto
+     */
     public QuestionnairesDefinitionsDto questionnairesDefinitionsToDtoMapper(QuestionnaireDefinition questionnaireDefinition) {
         return modelMapper.map(questionnaireDefinition, QuestionnairesDefinitionsDto.class);
     }
 
+    /**
+     * Questionnaire definition to dto mapper questionnaire definition dto.
+     *
+     * @param questionnaireDefinition the questionnaire definition
+     * @return the questionnaire definition dto
+     */
     public QuestionnaireDefinitionDto questionnaireDefinitionToDtoMapper(QuestionnaireDefinition questionnaireDefinition) {
         QuestionnaireDefinitionDto questionnaireDefinitionDto = modelMapper.map(questionnaireDefinition, QuestionnaireDefinitionDto.class);
 
@@ -39,6 +59,12 @@ public class QuestionnaireDefinitionMapper {
         return questionnaireDefinitionDto;
     }
 
+    /**
+     * Questionnaire definition dto to questionnaire definition mapper questionnaire definition.
+     *
+     * @param questionnaireDefinitionDto the questionnaire definition dto
+     * @return the questionnaire definition
+     */
     public QuestionnaireDefinition questionnaireDefinitionDtoToQuestionnaireDefinitionMapper(QuestionnaireDefinitionDto questionnaireDefinitionDto) {
         QuestionnaireDefinition questionnaireDefinition = modelMapper.map(questionnaireDefinitionDto, QuestionnaireDefinition.class);
 

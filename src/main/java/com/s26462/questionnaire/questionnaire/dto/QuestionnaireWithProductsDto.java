@@ -1,10 +1,12 @@
 package com.s26462.questionnaire.questionnaire.dto;
 
-import com.s26462.questionnaire.product.Product;
 import lombok.Data;
 
 import java.util.List;
 
+/**
+ * The type Questionnaire with products dto.
+ */
 @Data
 public class QuestionnaireWithProductsDto {
 

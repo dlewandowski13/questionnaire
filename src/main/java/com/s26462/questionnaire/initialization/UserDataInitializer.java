@@ -8,6 +8,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+/**
+ * The type User data initializer.
+ */
 @Component
 @AllArgsConstructor
 public class UserDataInitializer implements CommandLineRunner {

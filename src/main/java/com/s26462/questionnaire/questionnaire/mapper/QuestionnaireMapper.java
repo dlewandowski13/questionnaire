@@ -15,22 +15,38 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * The type Questionnaire mapper.
+ */
 @Component
 public class QuestionnaireMapper {
     private final ModelMapper modelMapper;
 
+    /**
+     * Instantiates a new Questionnaire mapper.
+     *
+     * @param modelMapper the model mapper
+     */
     public QuestionnaireMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
     }
 
+    /**
+     * Map to questionnaire with products dto questionnaire with products dto.
+     *
+     * @param questionnaireDto the questionnaire dto
+     * @return the questionnaire with products dto
+     */
     public QuestionnaireWithProductsDto mapToQuestionnaireWithProductsDto(QuestionnaireDto questionnaireDto) {
         return modelMapper.map(questionnaireDto, QuestionnaireWithProductsDto.class);
     }
 
-    public QuestionnaireDto mapToQuestionnaireDto(QuestionnaireWithProductsDto questionnaireWithProductsDto) {
-        return modelMapper.map(questionnaireWithProductsDto, QuestionnaireDto.class);
-    }
-
+    /**
+     * Questionnaire to questionnaire with products dto mapper questionnaire with products dto.
+     *
+     * @param questionnaire the questionnaire
+     * @return the questionnaire with products dto
+     */
     public QuestionnaireWithProductsDto questionnaireToQuestionnaireWithProductsDtoMapper(Questionnaire questionnaire) {
         QuestionnaireWithProductsDto questionnaireWithProductsDtoDto
                 = modelMapper.map(questionnaire, QuestionnaireWithProductsDto.class);
@@ -44,6 +60,12 @@ public class QuestionnaireMapper {
         return questionnaireWithProductsDtoDto;
     }
 
+    /**
+     * Questionnaire with products dto to questionnaire mapper questionnaire.
+     *
+     * @param questionnaireWithProductsDto the questionnaire with products dto
+     * @return the questionnaire
+     */
     public Questionnaire questionnaireWithProductsDtoToQuestionnaireMapper(QuestionnaireWithProductsDto questionnaireWithProductsDto) {
         Questionnaire questionnaire = modelMapper.map(questionnaireWithProductsDto, Questionnaire.class);
 

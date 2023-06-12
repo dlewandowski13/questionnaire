@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * The type Reqister request.
+ */
 @Data
 @Builder
 @AllArgsConstructor

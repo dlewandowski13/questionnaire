@@ -3,6 +3,9 @@ package com.s26462.questionnaire.questionnaire.collection.utils;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * The type Insurer.
+ */
 @Getter
 @Setter
 public class Insurer {

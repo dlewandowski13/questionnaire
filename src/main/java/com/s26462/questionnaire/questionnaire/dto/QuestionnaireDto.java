@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * The type Questionnaire dto.
+ */
 @Data
 public class QuestionnaireDto {
 

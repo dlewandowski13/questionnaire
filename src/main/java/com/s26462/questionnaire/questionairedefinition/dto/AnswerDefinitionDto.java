@@ -5,6 +5,9 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * The type Answer definition dto.
+ */
 @Getter
 @Setter
 public class AnswerDefinitionDto {

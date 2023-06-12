@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Product initializer.
+ */
 @Component
 @AllArgsConstructor
 public class ProductInitializer implements CommandLineRunner {

@@ -19,6 +19,11 @@ public class ProductController {
 
     private final ProductService productService;
 
+    /**
+     * Instantiates a new Product controller.
+     *
+     * @param productService the product service
+     */
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
@@ -50,9 +55,8 @@ public class ProductController {
      * Metoda obsługująca POST:/products
      *
      * @param productsDto - lista obiektów produktów w formacie json
-     * @return ok
+     * @return ok response entity
      */
-
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> postProducts(@RequestBody List<ProductDto> productsDto) {
@@ -64,7 +68,7 @@ public class ProductController {
      * Metoda obsługująca POST:/products/product
      *
      * @param productDto - obiekt produktu w formacie json
-     * @return ok
+     * @return ok response entity
      */
     @PostMapping("/product")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -84,7 +88,6 @@ public class ProductController {
      * @param productDto    - obiekt produktu, który ma zostać zaktualizowany
      * @return ok lub notFound
      */
-
     @PutMapping("/product/{productSymbol}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ProductDto> putProducts(@PathVariable String productSymbol, @RequestBody ProductDto productDto) {
@@ -93,6 +96,12 @@ public class ProductController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    /**
+     * Delete product response entity.
+     *
+     * @param productSymbol the product symbol
+     * @return the response entity
+     */
     @DeleteMapping("/product/{productSymbol}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Void> deleteProduct(@PathVariable String productSymbol) {

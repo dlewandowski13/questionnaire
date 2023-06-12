@@ -6,6 +6,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
+/**
+ * The type Questionnaires definitions dto.
+ */
 @Getter
 @Setter
 public class QuestionnairesDefinitionsDto {

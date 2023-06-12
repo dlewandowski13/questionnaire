@@ -22,6 +22,11 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     @Query("{ symbol: ?0 }")
     Optional<Product> findBySymbol(String productSymbol);
 
+    /**
+     * Find all active products list.
+     *
+     * @return the list
+     */
     @Query("{ 'isActive' : true }")
     List<Product> findAllActiveProducts();
 
